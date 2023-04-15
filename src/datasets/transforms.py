@@ -296,6 +296,10 @@ def _get_affine_matrix(center, angle, translate, scale, shear):
     print(angle)
     print("\nshear")
     print(shear)
+    print("\nshear0")
+    print(shear[0])
+    print("\nshear1")
+    print(shear[1])
     print("\ncos")
     print(np.cos(angle))
     print("\nsin")
@@ -304,8 +308,8 @@ def _get_affine_matrix(center, angle, translate, scale, shear):
     print(np.sin(angle+shear))
     
     
-    RSS = np.matrix([[np.cos(angle), -np.sin(angle + shear),       0.],
-                     [np.sin(angle),  np.cos(angle + shear),       0.],
+    RSS = np.matrix([[np.cos(angle), -np.sin(angle + shear[0]),       0.],
+                     [np.sin(angle),  np.cos(angle + shear[1]),       0.],
                      [           0.,                     0., 1./scale]]) * scale
     print("\nRSS")
     print(RSS.view())
