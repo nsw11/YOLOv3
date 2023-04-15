@@ -292,6 +292,10 @@ def _get_affine_matrix(center, angle, translate, scale, shear):
     T = np.matrix([[1., 0., translate[0]],
                    [0., 1., translate[1]],
                    [0., 0.,           1.]])
+    print("Checking np values since matrix isnt projecting correctly\n cosine")
+    print(np.cos(angle))
+    print("\nsin")
+    print(np.sin(angle))
     RSS = np.matrix([[np.cos(angle), -np.sin(angle + shear),       0.],
                      [np.sin(angle),  np.cos(angle + shear),       0.],
                      [           0.,                     0., 1./scale]]) * scale
