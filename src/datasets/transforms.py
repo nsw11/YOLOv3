@@ -292,27 +292,30 @@ def _get_affine_matrix(center, angle, translate, scale, shear):
     T = np.matrix([[1., 0., translate[0]],
                    [0., 1., translate[1]],
                    [0., 0.,           1.]])
-    print("Checking np values since matrix isnt projecting correctly\n angle")
-    print(angle)
-    print("\nshear")
-    print(shear)
-    print("\nshear0")
-    print(shear[0])
-    print("\nshear1")
-    print(shear[1])
-    print("\ncos")
-    print(np.cos(angle))
-    print("\nsin")
-    print(np.sin(angle))
-    print("\nsin+ shear")
-    print(np.sin(angle+shear))
+    bose = False
+    if (bose):
+        print("Checking np values since matrix isnt projecting correctly\n angle")
+        print(angle)
+        print("\nshear")
+        print(shear)
+        print("\nshear0")
+        print(shear[0])
+        print("\nshear1")
+        print(shear[1])
+        print("\ncos")
+        print(np.cos(angle))
+        print("\nsin")
+        print(np.sin(angle))
+        print("\nsin+ shear")
+        print(np.sin(angle+shear))
     
     
     RSS = np.matrix([[np.cos(angle), -np.sin(angle + shear[0]),       0.],
                      [np.sin(angle),  np.cos(angle + shear[1]),       0.],
                      [           0.,                     0., 1./scale]]) * scale
-    print("\nRSS")
-    print(RSS.view())
+    """shear value is always just 1 value"""
+    if(shear[1] !=0):
+        print("Shear1 is not 0")
     M = T * C * RSS * np.linalg.inv(C)
     return M
 
