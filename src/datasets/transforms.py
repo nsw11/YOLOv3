@@ -292,12 +292,10 @@ def _get_affine_matrix(center, angle, translate, scale, shear):
     T = np.matrix([[1., 0., translate[0]],
                    [0., 1., translate[1]],
                    [0., 0.,           1.]])
-    print("T")
-    print(T.view())
     RSS = np.matrix([[np.cos(angle), -np.sin(angle + shear),       0.],
                      [np.sin(angle),  np.cos(angle + shear),       0.],
                      [           0.,                     0., 1./scale]]) * scale
-    print("RSS")
+    print("\nRSS")
     print(RSS.view())
     M = T * C * RSS * np.linalg.inv(C)
     return M
