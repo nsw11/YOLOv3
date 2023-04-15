@@ -295,6 +295,8 @@ def _get_affine_matrix(center, angle, translate, scale, shear):
     print("Checking np values since matrix isnt projecting correctly\n cosine")
     print(np.cos(angle))
     print("\nsin")
+    print(np.sin(angle))
+    print("\nsin+ shear")
     print(np.sin(angle+shear))
     RSS = np.matrix([[np.cos(angle), -np.sin(angle + shear),       0.],
                      [np.sin(angle),  np.cos(angle + shear),       0.],
