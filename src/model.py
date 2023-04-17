@@ -96,7 +96,7 @@ def make_conv_and_res_block(in_channels, out_channels, res_repeat):
 class VisionLayer(nn.Module):
     """A implementation of ViT for use to replace a convolutional NN via treating output as a classifier and restitching the image together using pytorch unflatten"""
 
-    def __init__(self, dim, image_size, patch_size, num_classes=52*52*3,transformer=efficient_transformer,channels=3):
+    def __init__(self, dim, image_size, patch_size, num_classes=52*52*3,channels=3):
         super(VisionLayer, self).__init__()
         self.ViT = ViT(
                 dim=128,
@@ -213,7 +213,6 @@ class DarkNet53BackBone(nn.Module):
                 image_size=224,
                 patch_size=32,
                 num_classes=52*52*3,
-                transformer=efficient_transformer,
                 channels=3)
         self.cr_block3 = make_conv_and_res_block(128, 256, 8)
         self.cr_block4 = make_conv_and_res_block(256, 512, 8)
