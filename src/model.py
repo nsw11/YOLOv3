@@ -104,7 +104,7 @@ class VisionLayer(nn.Module):
         self.unflatten = nn.Unflatten(1, (52,52,3))
 
     def forward(self, x):
-        out = self.ViT(x)
+        out = self.v(x)
         out = self.unflatten(out)
         return out
 class YoloLayer(nn.Module):
