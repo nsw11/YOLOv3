@@ -29,7 +29,7 @@ import logging
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
+from vit_pytorch import ViT
 from config import ANCHORS, NUM_ANCHORS_PER_SCALE, NUM_CLASSES, NUM_ATTRIB, LAST_LAYER_DIM
 
 Tensor = torch.Tensor
@@ -93,8 +93,25 @@ def make_conv_and_res_block(in_channels, out_channels, res_repeat):
     for idx in range(res_repeat):
         model.add_module('res{}'.format(idx), ResBlock(out_channels))
     return model
+class VisionLayer(nn.Module):
+    """A implementation of ViT for use to replace a convolutional NN via treating output as a classifier and restitching the image together using pytorch unflatten"""
 
+    def __init__(self, dim, image_size, patch_size, num_classes=52*52*3,transformer=efficient_transformer,channels=3):
+        super(VisionLayer, self).__init__()
+        self.ViT = ViT(
+                dim=128,
+                image_size=224,
+                patch_size=32,
+                num_classes=52*52*3,
+                transformer=efficient_transformer,
+                channels=3
+        )
+        self.unflatten = nn.Unflatten(1, (52,52,3))
 
+    def forward(self, x):
+        out = self.ViT(x)
+        out = self.unflatten(out)
+        return out
 class YoloLayer(nn.Module):
 
     def __init__(self, scale, stride):
@@ -190,9 +207,15 @@ class DarkNet53BackBone(nn.Module):
 
     def __init__(self):
         super(DarkNet53BackBone, self).__init__()
+        self.vision = 
         self.conv1 = ConvLayer(3, 32, 3)
-        self.cr_block1 = make_conv_and_res_block(32, 64, 1)
-        self.cr_block2 = make_conv_and_res_block(64, 128, 2)
+        self.cr_block1 = VisionLayer(                
+                dim=128,
+                image_size=224,
+                patch_size=32,
+                num_classes=52*52*3,
+                transformer=efficient_transformer,
+                channels=3)
         self.cr_block3 = make_conv_and_res_block(128, 256, 8)
         self.cr_block4 = make_conv_and_res_block(256, 512, 8)
         self.cr_block5 = make_conv_and_res_block(512, 1024, 4)
