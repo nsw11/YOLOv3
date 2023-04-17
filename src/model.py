@@ -105,6 +105,12 @@ class VisionLayer(nn.Module):
 
     def forward(self, x):
         out = self.v(x)
+        print("vision transformer dimension")
+        print(type(out))
+        print(len(out[0]))
+        print(len(out[0][0]))
+        numpy = np.array(out)
+        out = torch.tensor(numpy)
         out = self.unflatten(out)
         return out
 class YoloLayer(nn.Module):
