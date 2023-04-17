@@ -207,7 +207,6 @@ class DarkNet53BackBone(nn.Module):
 
     def __init__(self):
         super(DarkNet53BackBone, self).__init__()
-        self.vision = 
         self.conv1 = ConvLayer(3, 32, 3)
         self.cr_block1 = VisionLayer(                
                 dim=128,
@@ -221,10 +220,7 @@ class DarkNet53BackBone(nn.Module):
         self.cr_block5 = make_conv_and_res_block(512, 1024, 4)
 
     def forward(self, x):
-        tmp = self.conv1(x)
-        tmp = self.cr_block1(tmp)
-        tmp = self.cr_block2(tmp)
-        out3 = self.cr_block3(tmp)
+        out3 = self.cr_block1(x)
         out2 = self.cr_block4(out3)
         out1 = self.cr_block5(out2)
 
