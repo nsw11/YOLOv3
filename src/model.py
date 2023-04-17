@@ -98,14 +98,8 @@ class VisionLayer(nn.Module):
 
     def __init__(self, dim, image_size, patch_size, num_classes=52*52*3,channels=3):
         super(VisionLayer, self).__init__()
-        self.ViT = ViT(
-                dim=128,
-                image_size=224,
-                patch_size=32,
-                num_classes=52*52*3,
-                transformer=efficient_transformer,
-                channels=3
-        )
+        self.ViT = ViT(image_size = 224, patch_size = 32, num_classes = 52 * 52 *3, dim = 128, depth = 6, heads = 16, mlp_dim = 2048, dropout = 0.1, emb_dropout = 0.1)
+
         self.unflatten = nn.Unflatten(1, (52,52,3))
 
     def forward(self, x):
