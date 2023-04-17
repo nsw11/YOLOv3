@@ -31,6 +31,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from vit_pytorch import ViT
 from vit_pytorch.recorder import Recorder
+import numpy as np
 from config import ANCHORS, NUM_ANCHORS_PER_SCALE, NUM_CLASSES, NUM_ATTRIB, LAST_LAYER_DIM
 
 Tensor = torch.Tensor
@@ -99,19 +100,36 @@ class VisionLayer(nn.Module):
 
     def __init__(self, dim, image_size, patch_size, num_classes=52*52*3,channels=3):
         super(VisionLayer, self).__init__()
-        self.ViT = ViT(image_size = image_size, patch_size = patch_size, num_classes = num_classes, dim = dim, depth = 6, heads = 16, mlp_dim = 2048, dropout = 0.1, emb_dropout = 0.1)
+        self.ViT = ViT(image_size = image_size, patch_size = patch_size, num_classes =num_classes, dim = dim, depth = 6, heads = 16, mlp_dim = 512, dropout = 0.1, emb_dropout = 0.1)
         self.v = Recorder(self.ViT)
-        self.unflatten = nn.Unflatten(1, (4,128,52,52))
+        self.unflatten = nn.Unflatten(1, (256,52,52))
 
     def forward(self, x):
         out = self.v(x)
         print("vision transformer dimension")
         print(type(out))
+        print(len(out))
         print(len(out[0]))
         print(len(out[0][0]))
-        numpy = np.array(out)
+        print("First Dimension total layers:")
+        
+        for i in range(len(out)):
+          print(len(out[i]))
+        print("Second Dimension")
+        for i in range(len(out)):
+          print("\n\n\n")
+          print("i is ")
+          print(i)
+
+          for j in range(len(out[i])):
+
+            print(len(out[i][j]))
+        
+        numpy = np.asarray((out[0]),dtype= np.double)
+        print(numpy.size)
         out = torch.tensor(numpy)
         out = self.unflatten(out)
+        print(out.shape)
         return out
 class YoloLayer(nn.Module):
 
@@ -213,7 +231,7 @@ class DarkNet53BackBone(nn.Module):
                 dim=128,
                 image_size=416,
                 patch_size=32,
-                num_classes=52*52*128,
+                num_classes=52*52*256,
                 channels=3)
         self.cr_block3 = make_conv_and_res_block(128, 256, 8)
         self.cr_block4 = make_conv_and_res_block(256, 512, 8)
@@ -221,6 +239,8 @@ class DarkNet53BackBone(nn.Module):
 
     def forward(self, x):
         out3 = self.cr_block1(x)
+        print("out3 shape:")
+        print(out3.shape)
         out2 = self.cr_block4(out3)
         out1 = self.cr_block5(out2)
 
