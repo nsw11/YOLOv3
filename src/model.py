@@ -101,7 +101,7 @@ class VisionLayer(nn.Module):
         super(VisionLayer, self).__init__()
         self.ViT = ViT(image_size = image_size, patch_size = patch_size, num_classes = num_classes, dim = dim, depth = 6, heads = 16, mlp_dim = 2048, dropout = 0.1, emb_dropout = 0.1)
         self.v = Recorder(self.ViT)
-        self.unflatten = nn.Unflatten(1, (52,52))
+        self.unflatten = nn.Unflatten(1, (4,128,52,52))
 
     def forward(self, x):
         out = self.v(x)
@@ -213,7 +213,7 @@ class DarkNet53BackBone(nn.Module):
                 dim=128,
                 image_size=416,
                 patch_size=32,
-                num_classes=52*52*256,
+                num_classes=52*52*128,
                 channels=3)
         self.cr_block3 = make_conv_and_res_block(128, 256, 8)
         self.cr_block4 = make_conv_and_res_block(256, 512, 8)
