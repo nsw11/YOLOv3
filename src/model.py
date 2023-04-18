@@ -29,9 +29,9 @@ import logging
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 from vit_pytorch import ViT
 from vit_pytorch.recorder import Recorder
-import numpy as np
 from config import ANCHORS, NUM_ANCHORS_PER_SCALE, NUM_CLASSES, NUM_ATTRIB, LAST_LAYER_DIM
 
 Tensor = torch.Tensor
@@ -106,30 +106,33 @@ class VisionLayer(nn.Module):
 
     def forward(self, x):
         out = self.v(x)
-        print("vision transformer dimension")
-        print(type(out))
-        print(len(out))
-        print(len(out[0]))
-        print(len(out[0][0]))
-        print("First Dimension total layers:")
+        verbose = False
+        if verbose:
+          print("vision transformer dimension")
+          print(type(out))
+          print(len(out))
+          print(len(out[0]))
+          print(len(out[0][0]))
+          print("First Dimension total layers:")
         
-        for i in range(len(out)):
-          print(len(out[i]))
-        print("Second Dimension")
-        for i in range(len(out)):
-          print("\n\n\n")
-          print("i is ")
-          print(i)
+          for i in range(len(out)):
+            print(len(out[i]))
+          print("Second Dimension")
+          for i in range(len(out)):
+            print("\n\n\n")
+            print("i is ")
+            print(i)
 
-          for j in range(len(out[i])):
+            for j in range(len(out[i])):
 
-            print(len(out[i][j]))
+              print(len(out[i][j]))
         
         numpy = np.asarray((out[0]),dtype= np.double)
-        print(numpy.size)
+        #print(numpy.size)
         out = torch.tensor(numpy)
+        #out = torch.from_numpy(numpy),float()
         out = self.unflatten(out)
-        print(out.shape)
+        #print(out.shape)
         return out
 class YoloLayer(nn.Module):
 
@@ -239,9 +242,13 @@ class DarkNet53BackBone(nn.Module):
 
     def forward(self, x):
         out3 = self.cr_block1(x)
-        print("out3 shape:")
-        print(out3.shape)
-        out2 = self.cr_block4(out3)
+        #print("out3 shape:")
+        #print(out3.type(torch.float).dtype)
+        dubnation = out3.type(torch.DoubleTensor)
+        #print(dubnation.dtype)
+        out3 = out3.float()
+        out2 = self.cr_block4(out3)#.type(torch.float))
+        #out2 = self.cr_block4(dubnation)
         out1 = self.cr_block5(out2)
 
         return out1, out2, out3
