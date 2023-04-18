@@ -127,9 +127,9 @@ class VisionLayer(nn.Module):
 
               print(len(out[i][j]))
         
-        numpy = np.asarray((out[0]),dtype= np.double)
+        numpy = np.asarray((out[0].cpu()),dtype= np.double)
         #print(numpy.size)
-        out = torch.tensor(numpy)
+        out = torch.tensor(numpy).cuda()
         #out = torch.from_numpy(numpy),float()
         out = self.unflatten(out)
         #print(out.shape)
